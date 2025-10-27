@@ -510,18 +510,27 @@
     });
 
        
-        function showLocation(locationKey) {
-            document.querySelector('#map-view').setAttribute('visible', false);
-            document.querySelector('#default-sky').setAttribute('visible', false);
-            document.querySelector(`#${locationKey}-view`).setAttribute('visible', true);
-            document.querySelector('#back-btn').style.display = 'block';
-            currentView = locationKey;
+        // THE NEW, FIXED FUNCTION
+function showLocation(locationKey) {
+    document.querySelector('#map-view').setAttribute('visible', false);
+    document.querySelector('#default-sky').setAttribute('visible', false);
 
-            // ✅ Show 3D next button
-            showNextButton(true);
-        }
+    // --- THIS IS THE FIX ---
+    // Loop through ALL locations and hide them FIRST
+    Object.keys(locations).forEach(key => {
+        document.querySelector(`#${key}-view`).setAttribute('visible', false);
+    });
+    // --- END OF FIX ---
 
+    // Now, show ONLY the one we want
+    document.querySelector(`#${locationKey}-view`).setAttribute('visible', true);
+    
+    document.querySelector('#back-btn').style.display = 'block';
+    currentView = locationKey;
 
+    // Show 3D next button
+    showNextButton(true);
+}
 
         // Show 3D "Next" button when viewing a location
     function showNextButton(show) {
