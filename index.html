@@ -530,7 +530,7 @@
     }
 
     // Handle "Next" button click (in VR)
-    document.querySelector('#next-btn-3d').addEventListener('click', () => {
+    document.querySelector('#next-btn-3d a-plane').addEventListener('click', () => {
         const keys = Object.keys(locations);
         const currentIndex = keys.indexOf(currentView);
         const nextIndex = (currentIndex + 1) % keys.length;
