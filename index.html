@@ -444,7 +444,7 @@
         <a-camera position="0 1.6 0">
             <a-cursor 
                 color="white"
-                raycaster="objects: .marker"
+                raycaster="objects: .marker, .clickable" 
                 animation__click="property: scale; startEvents: click; dur: 150; to: 0.8 0.8 0.8"
                 animation__clickreset="property: scale; startEvents: animationcomplete__click; dur: 150; to: 1 1 1">
             </a-cursor>
