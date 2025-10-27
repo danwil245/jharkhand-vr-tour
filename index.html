@@ -1,4 +1,10 @@
-<style>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Jharkhand Tourism VR Experience</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -296,3 +302,292 @@
             to { opacity: 1; }
         }
     </style>
+</head>
+<body>
+    <div class="controls">
+        <div class="title">🗺️ Jharkhand VR Tour</div>
+        <button class="vr-button" onclick="enterVR()">🥽 Enter VR</button>
+        <button class="back-button" id="back-btn" onclick="showMap()" style="display: none;">🗺️ Back to Map</button>
+        <button onclick="showInfo()" id="info-btn">ℹ️ Info</button>
+    </div>
+    <button id="next-btn" style="position:fixed;bottom:20px;right:20px;z-index:999;">Next</button>
+
+    <a-scene 
+        embedded 
+        style="height: 100vh; width: 100vw;"
+        vr-mode-ui="enabled: true">
+        
+        <a-assets>
+            <img id="map-img" src="jharkhand-map.jpg">
+            <img id="hundru-img" src="hundru-falls.jpg">
+            <img id="baidyanath-img" src="baidyanath-temple-360.jpg">
+            <img id="netarhat-img" src="netarhat-sunset-360.jpg">
+            <img id="betla-img" src="betla-national-park-360.jpg">
+            <img id="patratu-img" src="patratu-valley-360.jpg">
+            <img id="tagore-img" src="tagore-hill-360.jpg">
+        </a-assets>
+        <!-- 3D VR Button -->
+    <a-entity id="next-btn-3d" position="0 1.2 -2" visible="false">
+    <a-plane 
+        color="#FF6B35" 
+        width="1" 
+        height="0.4" 
+        radius="0.1"
+        class="clickable"
+        event-set__enter="_event: mouseenter; color: #FFA500"
+        event-set__leave="_event: mouseleave; color: #FF6B35">
+    </a-plane>
+    <a-text 
+        value="Next ➡️" 
+        align="center" 
+        color="white" 
+        position="0 0 0.02"
+        width="4">
+    </a-text>
+    </a-entity>
+
+        <!-- Simple Map View -->
+        <a-entity id="map-view">
+            <a-plane 
+                position="0 0 -5"
+                width="10"
+                height="7"
+                material="src: #map-img; color: #ffffff"
+                visible="true">
+            </a-plane>
+            
+            <a-text 
+                position="0 4 -4.8"
+                text="value: JHARKHAND TOURISM MAP; color: #FFD700; align: center; width: 30"
+                scale="0.8 0.8 0.8">
+            </a-text>
+            
+            <!-- Simple clickable markers -->
+            <a-sphere position="0 -0.5 -4.5" radius="0.1" color="#FF0000" class="marker" data-location="hundru" 
+                animation="property: scale; to: 1.2 1.2 1.2; duration: 1000; loop: true; dir: alternate">
+                <a-text position="0 -0.3 0" text="value: Hundru Falls; color: black; align: center; width: 25" scale="0.3 0.3 0.3"></a-text>
+            </a-sphere>
+            
+            <a-sphere position="2 1 -4.5" radius="0.1" color="#FF0000" class="marker" data-location="baidyanath"
+                animation="property: scale; to: 1.2 1.2 1.2; duration: 1200; loop: true; dir: alternate">
+                <a-text position="0 -0.3 0" text="value: Baidyanath Temple; color: black; align: center; width: 25" scale="0.3 0.3 0.3"></a-text>
+            </a-sphere>
+            
+            <a-sphere position="-2.5 0.2 -4.5" radius="0.1" color="#FF0000" class="marker" data-location="netarhat"
+                animation="property: scale; to: 1.2 1.2 1.2; duration: 1400; loop: true; dir: alternate">
+                <a-text position="0 -0.3 0" text="value: Netarhat; color: black; align: center; width: 25" scale="0.3 0.3 0.3"></a-text>
+            </a-sphere>
+            
+            <a-sphere position="-2.3 0.8 -4.5" radius="0.1" color="#FF0000" class="marker" data-location="betla"
+                animation="property: scale; to: 1.2 1.2 1.2; duration: 1600; loop: true; dir: alternate">
+                <a-text position="0 -0.3 0" text="value: Betla Park; color: black; align: center; width: 25" scale="0.3 0.3 0.3"></a-text>
+            </a-sphere>
+            
+            <a-sphere position="0.5 0 -4.5" radius="0.1" color="#FF0000" class="marker" data-location="patratu"
+                animation="property: scale; to: 1.2 1.2 1.2; duration: 1800; loop: true; dir: alternate">
+                <a-text position="0 -0.3 0" text="value: Patratu Valley; color: black; align: center; width: 25" scale="0.3 0.3 0.3"></a-text>
+            </a-sphere>
+            
+            <a-sphere position="-0.5 -0.8 -4.5" radius="0.1" color="#FF0000" class="marker" data-location="tagore"
+                animation="property: scale; to: 1.2 1.2 1.2; duration: 2000; loop: true; dir: alternate">
+                <a-text position="0 -0.3 0" text="value: Tagore Hill; color: black; align: center; width: 25" scale="0.3 0.3 0.3"></a-text>
+            </a-sphere>
+        </a-entity>
+
+        <!-- Location Views (hidden by default) -->
+        <a-entity id="hundru-view" visible="false">
+            <a-sky src="#hundru-img"></a-sky>
+            <a-text position="0 3 -6" text="value: Hundru Falls; color: rgba(255,255,255,0.8); align: center; width: 20" scale="1.5 1.5 1.5"></a-text>
+            <a-text position="0 2.2 -6" text="value: Height: 320 feet; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+            <a-text position="0 1.8 -6" text="value: Subarnarekha River; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+        </a-entity>
+
+        <a-entity id="baidyanath-view" visible="false">
+            <a-sky src="#baidyanath-img"></a-sky>
+            <a-text position="0 3 -6" text="value: Baidyanath Temple; color: rgba(255,255,255,0.8); align: center; width: 20" scale="1.5 1.5 1.5"></a-text>
+            <a-text position="0 2.2 -6" text="value: Sacred Jyotirlinga; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+            <a-text position="0 1.8 -6" text="value: Lord of Healers; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+        </a-entity>
+
+        <a-entity id="netarhat-view" visible="false">
+            <a-sky src="#netarhat-img"></a-sky>
+            <a-text position="0 3 -6" text="value: Netarhat Hill Station; color: rgba(255,255,255,0.8); align: center; width: 20" scale="1.5 1.5 1.5"></a-text>
+            <a-text position="0 2.2 -6" text="value: Queen of Chotanagpur; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+            <a-text position="0 1.8 -6" text="value: Sunrise Point; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+        </a-entity>
+
+        <a-entity id="betla-view" visible="false">
+            <a-sky src="#betla-img"></a-sky>
+            <a-text position="0 3 -6" text="value: Betla National Park; color: rgba(255,255,255,0.8); align: center; width: 20" scale="1.5 1.5 1.5"></a-text>
+            <a-text position="0 2.2 -6" text="value: Tigers and Elephants; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+            <a-text position="0 1.8 -6" text="value: Wildlife Safari; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+        </a-entity>
+
+        <a-entity id="patratu-view" visible="false">
+            <a-sky src="#patratu-img"></a-sky>
+            <a-text position="0 3 -6" text="value: Patratu Valley; color: rgba(255,255,255,0.8); align: center; width: 20" scale="1.5 1.5 1.5"></a-text>
+            <a-text position="0 2.2 -6" text="value: Dam and Boating; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+            <a-text position="0 1.8 -6" text="value: Scenic Beauty; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+        </a-entity>
+
+        <a-entity id="tagore-view" visible="false">
+            <a-sky src="#tagore-img"></a-sky>
+            <a-text position="0 3 -6" text="value: Tagore Hill; color: rgba(255,255,255,0.8); align: center; width: 20" scale="1.5 1.5 1.5"></a-text>
+            <a-text position="0 2.2 -6" text="value: Rabindranath Tagore; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+            <a-text position="0 1.8 -6" text="value: Panoramic Views; color: rgba(255,215,0,0.7); align: center; width: 18"></a-text>
+        </a-entity>
+
+        <!-- Default sky for map -->
+        <a-sky id="default-sky" color="#1a1a2e"></a-sky>
+
+        <!-- Camera -->
+        <a-camera position="0 1.6 0">
+            <a-cursor 
+                color="white"
+                raycaster="objects: .marker"
+                animation__click="property: scale; startEvents: click; dur: 150; to: 0.8 0.8 0.8"
+                animation__clickreset="property: scale; startEvents: animationcomplete__click; dur: 150; to: 1 1 1">
+            </a-cursor>
+        </a-camera>
+
+        <!-- Simple lighting -->
+        <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+    </a-scene>
+
+    <script>
+        let currentView = 'map';
+
+        const locations = {
+            hundru: {
+                title: "Hundru Falls",
+                description: "Spectacular 320-foot waterfall on the Subarnarekha River"
+            },
+            baidyanath: {
+                title: "Baidyanath Temple", 
+                description: "Sacred Jyotirlinga temple, one of the holiest Shiva temples"
+            },
+            netarhat: {
+                title: "Netarhat Hill Station",
+                description: "Queen of Chotanagpur, famous for sunrise and sunset views"
+            },
+            betla: {
+                title: "Betla National Park",
+                description: "Wildlife sanctuary with tigers, elephants and diverse fauna"
+            },
+            patratu: {
+                title: "Patratu Valley",
+                description: "Beautiful valley with dam, perfect for boating and photography"
+            },
+            tagore: {
+                title: "Tagore Hill",
+                description: "Historic hill with panoramic views, named after Rabindranath Tagore"
+            }
+        };
+
+        // Initialize after scene loads
+        document.querySelector('a-scene').addEventListener('loaded', function() {
+            // Add click listeners to markers
+            document.querySelectorAll('.marker').forEach(marker => {
+                marker.addEventListener('click', function() {
+                    const location = this.getAttribute('data-location');
+                    showLocation(location);
+                });
+            });
+            
+            console.log('Jharkhand VR Tour Ready!');
+        });
+        document.querySelector('#next-btn').addEventListener('click', () => {
+    const keys = Object.keys(locations);
+    const currentIndex = keys.indexOf(currentView);
+    const nextIndex = (currentIndex + 1) % keys.length;
+    const nextLocation = keys[nextIndex];
+
+    if (currentView !== 'map') {
+        showLocation(nextLocation);
+    } else {
+        showLocation(keys[0]);
+    }
+    });
+
+       
+        function showLocation(locationKey) {
+            document.querySelector('#map-view').setAttribute('visible', false);
+            document.querySelector('#default-sky').setAttribute('visible', false);
+            document.querySelector(`#${locationKey}-view`).setAttribute('visible', true);
+            document.querySelector('#back-btn').style.display = 'block';
+            currentView = locationKey;
+
+            // ✅ Show 3D next button
+            showNextButton(true);
+        }
+
+
+
+        // Show 3D "Next" button when viewing a location
+    function showNextButton(show) {
+        const btn = document.querySelector('#next-btn-3d');
+        btn.setAttribute('visible', show);
+    }
+
+    // Handle "Next" button click (in VR)
+    document.querySelector('#next-btn-3d').addEventListener('click', () => {
+        const keys = Object.keys(locations);
+        const currentIndex = keys.indexOf(currentView);
+        const nextIndex = (currentIndex + 1) % keys.length;
+        const nextLocation = keys[nextIndex];
+        showLocation(nextLocation);
+    });
+
+        /*function showMap() {
+            // Hide all location views
+            Object.keys(locations).forEach(key => {
+                document.querySelector(`#${key}-view`).setAttribute('visible', false);
+            });
+            
+            // Show map view
+            document.querySelector('#map-view').setAttribute('visible', true);
+            document.querySelector('#default-sky').setAttribute('visible', true);
+            
+            // Update UI
+            document.querySelector('#back-btn').style.display = 'none';
+            currentView = 'map';
+            
+            console.log('Back to map');
+        }*/
+        function showMap() {
+            Object.keys(locations).forEach(key => {
+                document.querySelector(`#${key}-view`).setAttribute('visible', false);
+            });
+            document.querySelector('#map-view').setAttribute('visible', true);
+            document.querySelector('#default-sky').setAttribute('visible', true);
+            document.querySelector('#back-btn').style.display = 'none';
+            currentView = 'map';
+
+            // ❌ Hide 3D next button
+            showNextButton(false);
+        }
+        function enterVR() {
+            document.querySelector('a-scene').enterVR();
+        }
+
+        function showInfo() {
+            if (currentView === 'map') {
+                alert('Welcome to Jharkhand VR Tour!\n\nClick on the red markers to explore different tourist destinations.\n\nUse VR mode for an immersive experience!\n\nKeyboard shortcuts:\n- V: Enter VR\n- M/ESC: Back to map');
+            } else {
+                const location = locations[currentView];
+                alert(`${location.title}\n\n${location.description}`);
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.key.toLowerCase() === 'm') {
+                if (currentView !== 'map') showMap();
+            }
+            if (e.key.toLowerCase() === 'v') {
+                enterVR();
+            }
+        });
+    </script>
+</body>
+</html>
